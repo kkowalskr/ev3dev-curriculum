@@ -43,9 +43,11 @@ class Snatch3r(object):
 
         pos = degrees * 90
 
-        self.left_motor.run_to_rel_pos(position_sp = pos, speed_sp = sp,stop_action=
+        self.left_motor.run_to_rel_pos(position_sp = pos, speed_sp = sp,
+                                       stop_action=
                                   ev3.Motor.STOP_ACTION_BRAKE)
-        self.right_motor.run_to_rel_pos(position_sp = pos, speed_sp = -sp, stop_action=
+        self.right_motor.run_to_rel_pos(position_sp = -pos, speed_sp = -sp,
+                                        stop_action=
                                   ev3.Motor.STOP_ACTION_BRAKE)
         self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
