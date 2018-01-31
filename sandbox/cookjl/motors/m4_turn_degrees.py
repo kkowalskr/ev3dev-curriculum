@@ -38,7 +38,7 @@ def main():
         if degrees == 0:
             break
 
-        robot.turn_degrees(degrees)
+        robot.turn_degrees(degrees,speed_deg_per_second)
         ev3.Sound.beep().wait()  # Fun little beep
 
     print("Goodbye!")
