@@ -18,6 +18,7 @@ import time
 
 class Snatch3r(object):
     """Commands for the Snatch3r robot that might be useful in many different programs."""
+
     def __init__(self):
         self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
@@ -25,8 +26,18 @@ class Snatch3r(object):
         assert self.left_motor.connected
         assert self.right_motor.connected
 
-    
+    def drive_inches(self, distance, sp):
 
-    # TODO: Implement the Snatch3r class as needed when working the sandox exercises
-    # (and delete these comments)
+        pos = distance * 90
 
+        self.left_motor.run_to_rel_pos(position_sp=pos, speed_sp=sp,
+                                  stop_action=
+                                  ev3.Motor.STOP_ACTION_BRAKE)
+        self.right_motor.run_to_rel_pos(position_sp=pos, speed_sp=sp,
+                                   stop_action=
+                                   ev3.Motor.STOP_ACTION_BRAKE)
+        self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+        self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+
+        # TODO: Implement the Snatch3r class as needed when working the sandox exercises
+        # (and delete these comments)
