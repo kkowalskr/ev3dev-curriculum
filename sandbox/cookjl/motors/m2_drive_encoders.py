@@ -43,7 +43,7 @@ def main():
 
     print("Goodbye!")
     ev3.Sound.speak("Goodbye").wait()
-
+main()
 # Done: 2. Copy the contents of your m1_drive_timed.py and paste that text into
 #  this file below these comments.
 #   If your program says and prints anything at the start change it to print and say "Drive using encoders"
@@ -52,7 +52,8 @@ def main():
 # code to hear the beep AFTER movement.
 #   ev3.Sound.beep().wait()
 
-# TODO: 4. Instead of using the run_forever, time.sleep, stop pattern switch to using the run_to_rel_pos command.
+# Done: 4. Instead of using the run_forever, time.sleep, stop pattern switch to
+#  using the run_to_rel_pos command.
 #   You will need to determine the position_sp value to pass into the run_to_rel_pos command as a named argument.
 #   Assume the diameter of the wheel is 1.3" (close enough).  A 1.3" diameter wheel results in approximately a 4"
 #     circumference, so 360 degrees = 4 inches of travel.
@@ -68,9 +69,11 @@ def main():
 #        -- speed_sp
 #        -- stop_action
 
-# TODO: 5. Make sure the beep happens AFTER the motors stop.  Use the wait_while command to block code execution.
+# Done: 5. Make sure the beep happens AFTER the motors stop.  Use the
+# wait_while command to block code execution.
 
-# TODO: 6. Formally test your work. When you think you have the problem complete run these tests:
+# Done: 6. Formally test your work. When you think you have the problem
+# complete run these tests:
 #   200 dps 24 inches (make sure it drives within 2 inches of the target distance)
 #   400 dps 24 inches (make sure it drives within 2 inches of the target distance)
 #   800 dps 24 inches (make sure it drives within 2 inches of the target distance)
