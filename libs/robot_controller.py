@@ -80,3 +80,12 @@ class Snatch3r(object):
 
         self.arm_motor.run_to_abs_pos(position_sp=0, speed_sp=900)
         self.arm_motor.wait_while(ev3.Motor.STATE_HOLDING)
+
+    def shutdown(self):
+        self.left_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        self.right_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        self.arm_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+        print('Goodbye')
+        ev3.Sound.speak('Goodbye').wait(.01)
