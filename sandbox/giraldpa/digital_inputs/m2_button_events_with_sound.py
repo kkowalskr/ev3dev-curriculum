@@ -36,7 +36,8 @@ def main():
     # Beep is a simple and useful sound.
     ev3.Sound.beep().wait()
     ev3.Sound.beep().wait()
-    print('Press Ctrl C on your keyboard to exit this program (the Back button is not wired up to exit)')
+    print(
+        'Press Ctrl C on your keyboard to exit this program (the Back button is not wired up to exit)')
 
     # Making a simple class is the best way to pass around data between different events.
     dc = DataContainer()
@@ -54,14 +55,16 @@ def main():
 
     # TODO: 5. Note #4 is lower (this is TO DO #5 which you should do after #4).
     # Add a lambda callback for on_backspace.  The syntax of lambda is:
-    #   btn.on_backspace = lamdba predefined_inputs: function_name(parameters)
+    #   btn.on_backspace = lamdba predefined_inputs: function_name(
+    # parameters)t
     # You will need to change the predefined_inputs, function_name, and parameters from that syntax template.
     # Using lambda call the function handle_shutdown passing in the state and dc
     # Note: the function handle_shutdown does not exist yet, you will write it in todo6.
 
     while dc.running:
         btn.process()  # This command is VERY important when using button callbacks!
-        time.sleep(0.01)  # A short delay is important to allow other things to happen.
+        time.sleep(
+            0.01)  # A short delay is important to allow other things to happen.
 
     print("Goodbye!")
     ev3.Sound.speak("Goodbye").wait()
@@ -124,14 +127,18 @@ def play_song_by_individual_tones():
     Exam of using the ev3.Sound.tone method to play a single tone. For music the ev3.Sound.tone method
     often sounds better with the list approach below. Just showing it doesn't have to be a list.
     """
-    tone_map = {"c4": 261.6, "c4s": 277.2, "d4": 293.7, "d4s": 311.1, "e4": 329.6, "f4": 349.2, "f4s": 370.0,
-                "g4": 392.0, "g4s": 415.3, "a4": 440, "a4s": 466.2, "b4": 493.9, "c5": 523.3, "c5s": 554.4,
+    tone_map = {"c4": 261.6, "c4s": 277.2, "d4": 293.7, "d4s": 311.1,
+                "e4": 329.6, "f4": 349.2, "f4s": 370.0,
+                "g4": 392.0, "g4s": 415.3, "a4": 440, "a4s": 466.2,
+                "b4": 493.9, "c5": 523.3, "c5s": 554.4,
                 "d5": 587.3,
-                "d5s": 622.3, "e5": 659.3, "f5": 698.5, "f5s": 740.0, "g5": 784.0, "g5s": 830.6, "a5": 880,
+                "d5s": 622.3, "e5": 659.3, "f5": 698.5, "f5s": 740.0,
+                "g5": 784.0, "g5s": 830.6, "a5": 880,
                 "a5s": 932.3, "b5": 987.8, "c6": 1046.5}
 
     tempo_ms = 20
-    ev3.Sound.tone(tone_map["e5"], tempo_ms * 3).wait()  # Units are in milliseconds
+    ev3.Sound.tone(tone_map["e5"],
+                   tempo_ms * 3).wait()  # Units are in milliseconds
     ev3.Sound.tone(tone_map["e5"], tempo_ms * 6).wait()
     ev3.Sound.tone(tone_map["e5"], tempo_ms * 3).wait()
     time.sleep(tempo_ms / 1000 * 3)  # Units are in seconds so divide by 1000
@@ -154,7 +161,8 @@ def play_song_by_notes_list():
     ev3.Sound.tone([
         (392, 350, 100), (392, 350, 100), (392, 350, 100), (311.1, 250, 100),
         (466.2, 25, 100), (392, 350, 100), (311.1, 250, 100), (466.2, 25, 100),
-        (392, 700, 100)  # Commented out the rest of the song to make testing faster.
+        (392, 700, 100)
+        # Commented out the rest of the song to make testing faster.
 
         # , (587.32, 350, 100), (587.32, 350, 100),
         # (587.32, 350, 100), (622.26, 250, 100), (466.2, 25, 100),
@@ -179,7 +187,8 @@ def speak():
     """
     Example of using the speak command.  This is probably the most useful ev3.Sound feature.
     """
-    ev3.Sound.speak("Everything is awesome!")  # This version does not wait for the sound to complete to continue
+    ev3.Sound.speak(
+        "Everything is awesome!")  # This version does not wait for the sound to complete to continue
     # ev3.Sound.speak("Everything is awesome!").wait()  # This version blocks future code execution until complete.
 
 
