@@ -193,6 +193,7 @@ def handle_blue_down1(button_state, robot):
     robot.left_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
     ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
 
+
 # ----------------------------------------------------------------------
 # Calls  main  to start the ball rolling.
 # ----------------------------------------------------------------------
