@@ -158,40 +158,36 @@ def handle_red_up1(button_state, robot):
     if button_state:
         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
         robot.left_motor.run_forever(speed_sp=600)
-        while button_state is True:
-            time.sleep(.01)
-    robot.left_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-    ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+    else:
+        robot.left_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
 
 
 def handle_red_down1(button_state, robot):
     if button_state:
         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
         robot.left_motor.run_forever(speed_sp=-600)
-        while button_state is True:
-            time.sleep(.01)
-    robot.left_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-    ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+    else:
+        robot.left_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
 
 
 def handle_blue_up1(button_state, robot):
     if button_state:
         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
         robot.right_motor.run_forever(speed_sp=600)
-        while button_state is True:
-            time.sleep(.01)
-    robot.left_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-    ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+    else:
+        robot.right_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
 
 
 def handle_blue_down1(button_state, robot):
     if button_state:
         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
         robot.right_motor.run_forever(speed_sp=-600)
-        while button_state is True:
-            time.sleep(.01)
-    robot.left_motor.stop_action(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-    ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+    else:
+        robot.right_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
 
 
 # ----------------------------------------------------------------------
