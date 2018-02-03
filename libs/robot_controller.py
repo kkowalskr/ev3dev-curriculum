@@ -26,7 +26,7 @@ class Snatch3r(object):
         self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
         self.arm_motor = ev3.MediumMotor(ev3.OUTPUT_A)
-        self.touch_sensor = ev3.TouchSensor
+        self.touch_sensor = ev3.TouchSensor()
 
         assert self.touch_sensor
         assert self.arm_motor.connected
