@@ -32,6 +32,7 @@ class Snatch3r(object):
         assert self.arm_motor.connected
         assert self.left_motor.connected
         assert self.right_motor.connected
+        self.MAX_SPEED = 900
 
     def drive_inches(self, distance, sp):
         """Drives the robot forward a set amount of distance at a speed"""
@@ -56,18 +57,21 @@ class Snatch3r(object):
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
     def arm_calibration(self):
+        self.arm_motor.run_forever(speed_sp=self.MAX_SPEED)
 
-        self.arm_motor.run_forever(speed_sp=900)
         while not self.touch_sensor.is_pressed:
             time.sleep(0.01)
+
         self.arm_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         ev3.Sound.beep().wait()
+
         arm_revolutions_for_full_range = 5112
         self.arm_motor.run_to_rel_pos(
             position_sp=-arm_revolutions_for_full_range)
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
         ev3.Sound.beep().wait()
         self.arm_motor.position = 0
+
 
     def arm_up(self):
 
