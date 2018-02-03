@@ -72,7 +72,6 @@ class Snatch3r(object):
         ev3.Sound.beep().wait()
         self.arm_motor.position = 0
 
-
     def arm_up(self):
 
         self.arm_motor.run_forever(speed_sp=900)
