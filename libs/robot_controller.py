@@ -36,7 +36,7 @@ class Snatch3r(object):
 
     def drive_inches(self, distance, sp):
         """Drives the robot forward set amount of distance at a speed and
-        backwards at a negative speed"""
+        backwards at a negative position"""
         pos = distance * 90
 
         self.left_motor.run_to_rel_pos(position_sp=pos, speed_sp=sp,
