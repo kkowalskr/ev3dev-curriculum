@@ -35,7 +35,8 @@ class Snatch3r(object):
         self.MAX_SPEED = 900
 
     def drive_inches(self, distance, sp):
-        """Drives the robot forward a set amount of distance at a speed"""
+        """Drives the robot forward set amount of distance at a speed and
+        backwards at a negative speed"""
         pos = distance * 90
 
         self.left_motor.run_to_rel_pos(position_sp=pos, speed_sp=sp,
@@ -46,7 +47,8 @@ class Snatch3r(object):
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
     def turn_degrees(self, degrees, sp):
-        """Turns the robot a given amount of degrees at a speed"""
+        """Turns the robot a given amount of degrees at a speed and positive
+        position and turns the  opposite way with negative position"""
         pos = int(degrees * 4.6)
 
         self.left_motor.run_to_rel_pos(position_sp=pos, speed_sp=sp,
@@ -57,7 +59,8 @@ class Snatch3r(object):
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
     def arm_calibration(self):
-        """Calibrates the robot arm and sets the bottom position to 0"""
+        """Calibrates the robot arm and sets the self.arm_position to 0 when
+        the arm is all the way down"""
         self.arm_motor.run_forever(speed_sp=self.MAX_SPEED)
 
         while not self.touch_sensor.is_pressed:
