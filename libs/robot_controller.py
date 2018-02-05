@@ -57,6 +57,7 @@ class Snatch3r(object):
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
     def arm_calibration(self):
+        """Calibrates the robot arm and sets the bottom position to 0"""
         self.arm_motor.run_forever(speed_sp=self.MAX_SPEED)
 
         while not self.touch_sensor.is_pressed:
@@ -73,7 +74,7 @@ class Snatch3r(object):
         self.arm_motor.position = 0
 
     def arm_up(self):
-
+        """Lifts the robot arm up until it hits the touch sensor"""
         self.arm_motor.run_forever(speed_sp=900)
         while not self.touch_sensor.is_pressed:
             time.sleep(0.01)
@@ -81,12 +82,13 @@ class Snatch3r(object):
         ev3.Sound.beep().wait()
 
     def arm_down(self):
-
+        """Lowers the robot arm to position 0"""
         self.arm_motor.run_to_abs_pos(position_sp=0, speed_sp=900)
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
         ev3.Sound.beep().wait()
 
     def shutdown(self):
+        """Shuts down the robot and sets the LEDs to Green"""
         self.left_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.right_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.arm_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
