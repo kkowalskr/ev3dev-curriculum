@@ -34,7 +34,7 @@ class Snatch3r(object):
         assert self.right_motor.connected
         self.MAX_SPEED = 900
 
-    def Loop_forever(self):
+    def loop_forever(self):
         self.running= True
         while self.running:
             time.sleep(0.1)
