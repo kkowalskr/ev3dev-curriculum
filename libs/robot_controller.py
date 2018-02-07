@@ -23,6 +23,7 @@ class Snatch3r(object):
     different programs."""
 
     def __init__(self):
+        self.running = True
         self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
         self.arm_motor = ev3.MediumMotor(ev3.OUTPUT_A)
@@ -35,10 +36,8 @@ class Snatch3r(object):
         self.MAX_SPEED = 900
 
     def loop_forever(self):
-        self.running= True
         while self.running:
             time.sleep(0.1)
-
 
     def drive_inches(self, distance, sp):
         """Drives the robot forward set amount of distance at a speed and
@@ -53,17 +52,22 @@ class Snatch3r(object):
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
     def drive(self, left_speed_entry, right_speed_entry):
+        """Drives the robot forward forever whenever the up button is
+        pressed on the keypad or on the tkinter window"""
         self.left_motor.run_forever(speed_sp=left_speed_entry)
         self.right_motor.run_forever(speed_sp=right_speed_entry)
 
     def stop(self):
+        """Stops the motors that are running on the robot when the spacebar
+        button is pressed on the keypad or on the tkinter window"""
         self.right_motor.stop()
         self.left_motor.stop()
 
     def backward(self, left_speed_entry, right_speed_entry):
+        """Drives the robot backwards when the down is pressed on the keypad
+        or on the tkinter window"""
         self.left_motor.run_forever(speed_sp=-left_speed_entry)
         self.right_motor.run_forever(speed_sp=-right_speed_entry)
-
 
     def turn_degrees(self, degrees, sp):
         """Turns the robot a given amount of degrees at a speed and positive
