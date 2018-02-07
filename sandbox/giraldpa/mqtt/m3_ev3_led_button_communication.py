@@ -32,9 +32,8 @@ communication.  Summary of the communication:
 Implement the TODOs below to complete this module, then transfer the file to the EV3 (as done in many previous units),
   then run this module on the EV3 while at the same time, running m3_pc_led_button_communication.py on your PC.
 
-Authors: David Fisher and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
-
+Authors: David Fisher and Pattie Giraldo.
+"""  # done: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 import mqtt_remote_method_calls as com
 
@@ -42,7 +41,8 @@ import ev3dev.ev3 as ev3
 import time
 
 
-# TODO: 2. Within the MyDelegate class below add the method, set_led, to receive messages as described above.
+# done: 2. Within the MyDelegate class below add the method, set_led,
+# to receive messages as described above.
 # Here is some code that will likely be VERY useful in that method to convert the led_side_string and led_color_string
 #   into a useful led_side and led_color values that can be used with the ev3.Leds.set_color method.
 #
@@ -68,9 +68,32 @@ import time
 #         ev3.Leds.set_color(led_side, led_color)
 
 class MyDelegate(object):
-
     def __init__(self):
         self.running = True
+
+    def set_led(self, led_side_string, led_color_string):
+
+        print("Received: {} {}".format(led_side_string, led_color_string))
+        led_side = None
+        if led_side_string == "left":
+            led_side = ev3.Leds.LEFT
+        elif led_side_string == "right":
+            led_side = ev3.Leds.RIGHT
+
+        led_color = None
+        if led_color_string == "green":
+            led_color = ev3.Leds.GREEN
+        elif led_color_string == "red":
+            led_color = ev3.Leds.RED
+        elif led_color_string == "black":
+            led_color = ev3.Leds.BLACK
+
+        if led_side is None or led_color is None:
+            print(
+                "Invalid parameters sent to set_led. led_side_string = {} led_color_string = {}".format(
+                    led_side_string, led_color_string))
+        else:
+            ev3.Leds.set_color(led_side, led_color)
 
 
 def main():
@@ -84,14 +107,17 @@ def main():
     # Note: you can determine the variable names that you should use by looking at the errors underlined in later code.
     # Once you have that done connect the mqtt_client to the MQTT broker using the connect_to_pc method.
     # Note: on EV3 you call connect_to_pc, but in the PC code it will call connect_to_ev3
-
+    my_delegate = MyDelegate()
+    mqtt_client = com.MqttClient(my_delegate)
+    mqtt_client.connect_to_pc()
 
     # Buttons on EV3 (these obviously assume TO DO: 3. is done)
     btn = ev3.Button()
     btn.on_up = lambda state: handle_button_press(state, mqtt_client, "Up")
     btn.on_down = lambda state: handle_button_press(state, mqtt_client, "Down")
     btn.on_left = lambda state: handle_button_press(state, mqtt_client, "Left")
-    btn.on_right = lambda state: handle_button_press(state, mqtt_client, "Right")
+    btn.on_right = lambda state: handle_button_press(state, mqtt_client,
+                                                     "Right")
     btn.on_backspace = lambda state: handle_shutdown(state, my_delegate)
 
     while my_delegate.running:
@@ -110,7 +136,7 @@ def handle_button_press(button_state, mqtt_client, button_name):
     """Handle IR / button event."""
     if button_state:
         print("{} button was pressed".format(button_name))
-
+        mqtt_client.send_message('button_pressed', [button_name])
         # TODO: 4. Send a message using MQTT that will:
         #   -- Call the method called "button_pressed" on the delegate at the other end of the pipe.
         #   -- Pass the parameters [button_name] as a list.
