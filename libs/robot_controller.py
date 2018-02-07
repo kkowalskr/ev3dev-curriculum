@@ -34,6 +34,12 @@ class Snatch3r(object):
         assert self.right_motor.connected
         self.MAX_SPEED = 900
 
+    def Loop_forever(self):
+        self.running= True
+        while self.running:
+            time.sleep(0.1)
+
+
     def drive_inches(self, distance, sp):
         """Drives the robot forward set amount of distance at a speed and
         backwards at a negative position"""
@@ -45,6 +51,19 @@ class Snatch3r(object):
                                         stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+
+    def drive(self, left_speed_entry, right_speed_entry):
+        self.left_motor.run_forever(speed_sp=left_speed_entry)
+        self.right_motor.run_forever(speed_sp=right_speed_entry)
+
+    def stop(self):
+        self.right_motor.stop()
+        self.left_motor.stop()
+
+    def backward(self, left_speed_entry, right_speed_entry):
+        self.left_motor.run_forever(speed_sp=-left_speed_entry)
+        self.right_motor.run_forever(speed_sp=-right_speed_entry)
+
 
     def turn_degrees(self, degrees, sp):
         """Turns the robot a given amount of degrees at a speed and positive
@@ -92,6 +111,8 @@ class Snatch3r(object):
 
     def shutdown(self):
         """Shuts down the robot and sets the LEDs to Green"""
+        self.running = False
+
         self.left_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.right_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.arm_motor.stop(stop_action=ev3.Motor.STOP_ACTION_BRAKE)
