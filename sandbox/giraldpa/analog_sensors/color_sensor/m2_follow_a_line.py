@@ -12,8 +12,8 @@ f - Follow the line until the touch sensor is pressed.  You are allowed to assum
      Extra - For a harder challenge could you drive on the black line and handle left or right turns?
 q - Quit
 
-Authors: David Fisher and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+Authors: David Fisher and Pattie Giraldo.
+"""  # done: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 import ev3dev.ev3 as ev3
 import time
@@ -27,14 +27,16 @@ def main():
     print("--------------------------------------------")
     ev3.Sound.speak("Follow a line").wait()
 
-    # TODO: 4: After running the code set the default white and black levels to a better initial guess.
+    # done: 4: After running the code set the default white and black levels to
+    #  a better initial guess.
     #   Once you have the values hardcoded to resonable numbers here you don't really need the w and b commands below.
-    white_level = 50
-    black_level = 40
+    white_level = 90
+    black_level = 12
     robot = robo.Snatch3r()
 
     while True:
-        command_to_run = input("Enter w (white), b (black), f (follow), or q (for quit): ")
+        command_to_run = input(
+            "Enter w (white), b (black), f (follow), or q (for quit): ")
         if command_to_run == 'w':
             print("Calibrate the white light level")
             # TODO: 2. Read the reflected_light_intensity property of the color sensor and set white_level to that value
@@ -43,12 +45,12 @@ def main():
             #   self.color_sensor = ev3.ColorSensor()
             #   assert self.color_sensor
             # Then here you can use a command like robot.color_sensor.reflected_light_intensity
-
+            white_level = robot.color_sensor.reflected_light_intensity
             print("New white level is {}.".format(white_level))
         elif command_to_run == 'b':
             print("Calibrate the black light level")
             # TODO: 3. Read the reflected_light_intensity property of the color sensor and set black_level
-
+            black_level = robot.color_sensor.reflected_light_intensity
             print("New black level is {}.".format(black_level))
         elif command_to_run == 'f':
             print("Follow the line until the touch sensor is pressed.")
@@ -56,7 +58,8 @@ def main():
         elif command_to_run == 'q':
             break
         else:
-            print(command_to_run, "is not a known command. Please enter a valid choice.")
+            print(command_to_run,
+                  "is not a known command. Please enter a valid choice.")
 
     print("Goodbye!")
     ev3.Sound.speak("Goodbye").wait()
@@ -74,9 +77,20 @@ def follow_the_line(robot, white_level, black_level):
       :type black_level: int
     """
 
-    # TODO: 5. Use the calibrated values for white and black to calculate a light threshold to determine if your robot
+    # done: 5. Use the calibrated values for white and black to calculate a
+    # light threshold to determine if your robot
     # should drive straight or turn to the right.  You will need to test and refine your code until it works well.
     # Optional extra - For a harder challenge could you drive on the black line and handle left or right turns?
+    while not robot.touch_sensor.is_pressed:
+        if robot.color_sensor.reflected_light_intensity <= black_level + 10:
+            while robot.color_sensor.reflected_light_intensity <= black_level + 10:
+                robot.drive(500, 500)
+            robot.stop()
+
+        elif robot.color_sensor.reflected_light_intensity >= white_level - 10:
+            while robot.color_sensor.reflected_light_intensity >= white_level - 10:
+                robot.drive(500, -500)
+            robot.stop()
 
     robot.stop()
     ev3.Sound.speak("Done")

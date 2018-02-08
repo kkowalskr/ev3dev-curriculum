@@ -34,7 +34,8 @@ def main():
     robot = robo.Snatch3r()
 
     while True:
-        command_to_run = input("Enter w (white), b (black), f (follow), or q (for quit): ")
+        command_to_run = input(
+            "Enter w (white), b (black), f (follow), or q (for quit): ")
         if command_to_run == 'w':
             print("Calibrate the white light level")
             # TODO: 2. Read the reflected_light_intensity property of the color sensor and set white_level to that value
@@ -43,12 +44,12 @@ def main():
             #   self.color_sensor = ev3.ColorSensor()
             #   assert self.color_sensor
             # Then here you can use a command like robot.color_sensor.reflected_light_intensity
-
+            white_level = robot.color_sensor.reflected_light_intensity
             print("New white level is {}.".format(white_level))
         elif command_to_run == 'b':
             print("Calibrate the black light level")
             # TODO: 3. Read the reflected_light_intensity property of the color sensor and set black_level
-
+            black_level = robot.color_sensor.reflected_light_intensity
             print("New black level is {}.".format(black_level))
         elif command_to_run == 'f':
             print("Follow the line until the touch sensor is pressed.")
@@ -56,7 +57,8 @@ def main():
         elif command_to_run == 'q':
             break
         else:
-            print(command_to_run, "is not a known command. Please enter a valid choice.")
+            print(command_to_run,
+                  "is not a known command. Please enter a valid choice.")
 
     print("Goodbye!")
     ev3.Sound.speak("Goodbye").wait()
