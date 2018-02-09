@@ -32,17 +32,16 @@ class Snatch3r(object):
         self.ir_sensor = ev3.InfraredSensor()
         self.beacon_seeker = ev3.BeaconSeeker(channel=4)
         self.color_sensor = ev3.ColorSensor()
-        self.pixy = ev3.Sensor(drivername='pixy-lego')
+        self.pixy = ev3.Sensor(driver_name='pixy-lego')
 
         assert self.ir_sensor.connected
         assert self.color_sensor.connected
-        # assert self.pixy.connected
+        assert self.pixy.connected
         assert self.touch_sensor.connected
         assert self.arm_motor.connected
         assert self.left_motor.connected
         assert self.right_motor.connected
         self.MAX_SPEED = 900
-        print('good')
 
     def loop_forever(self):
         while self.running:

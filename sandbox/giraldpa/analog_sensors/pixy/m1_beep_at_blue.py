@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 """
 The goal of this module is to let you practice with color detection with the Pixy.
 You will use the Pixy to beep when blue is placed in front of the Pixy camera.  You first need to setup signature 1 on
@@ -35,13 +35,23 @@ def main():
         #   self.pixy = ev3.Sensor(driver_name="pixy-lego")
         #   assert self.pixy
         # Then here you can use a command like width = robot.pixy.value(3)
+        width = robot.pixy.value(3)
 
-
+        if width == 0:
+            ev3.Sound.beep().wait()
+            time.sleep(1)
 
         time.sleep(0.1)
 
+        print('(X, Y)==({}, {}) Width={} Height={}'.format(robot.pixy.value(1),
+                                                           robot.pixy.value(2),
+                                                           robot.pixy.value(3),
+                                                           robot.pixy.value(
+                                                               4)))
+
     print("Goodbye!")
     ev3.Sound.speak("Goodbye").wait()
+
 
 # TODO: 3. Call over a TA or instructor to sign your team's checkoff sheet.
 #
