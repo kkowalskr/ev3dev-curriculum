@@ -16,6 +16,7 @@
 
 import ev3dev.ev3 as ev3
 import time
+import math
 
 
 class Snatch3r(object):
@@ -29,7 +30,7 @@ class Snatch3r(object):
         self.arm_motor = ev3.MediumMotor(ev3.OUTPUT_A)
         self.touch_sensor = ev3.TouchSensor()
         self.ir_sensor = ev3.InfraredSensor()
-        self.beacon_seeker = ev3.BeaconSeeker(channel=1)
+        self.beacon_seeker = ev3.BeaconSeeker(channel=4)
         self.color_sensor = ev3.ColorSensor()
         self.pixy = ev3.Sensor(drivername='pixy-lego')
 
@@ -120,6 +121,51 @@ class Snatch3r(object):
         self.arm_motor.run_to_abs_pos(position_sp=0, speed_sp=900)
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
         ev3.Sound.beep().wait()
+
+    def seek_beacon(self):
+
+        forward_speed = 300
+        turn_speed = 100
+        print("running")
+        while not self.touch_sensor.is_pressed:
+            print("while loop 1")
+            current_heading = self.beacon_seeker.heading
+            current_distance = self.beacon_seeker.distance
+            if current_distance == -128:
+                print("IR Remote not found. Distance is -128")
+                self.drive(-100, 100)
+            else:
+                if math.fabs(current_heading) < 2:
+                    print("On the right heading. Distance: ", current_distance)
+                    if current_distance <= 1:
+                        print("You have found the beacon!")
+                        self.stop()
+                        self.drive_inches(4, 300)
+                        self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+                        self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+                        ev3.Sound.speak("You have found the beacon!")
+                        return True
+                    elif current_distance > 1:
+                        self.drive(forward_speed, forward_speed)
+                elif math.fabs(current_heading) > 2 and math.fabs(
+                        current_heading) \
+                        < 10:
+                    print("Adjusting heading: ", current_heading)
+                    if current_heading < 0:
+                        self.drive(-turn_speed, turn_speed)
+                    elif current_heading > 0:
+                        self.drive(turn_speed, -turn_speed)
+                elif math.fabs(current_heading) > 10:
+                    self.drive(-200, 200)
+                    print("Heading too far off to fix: ", current_heading)
+
+                    # You add more!
+
+            time.sleep(0.2)
+
+            print("Abandon ship!")
+            self.stop()
+            return False
 
     def shutdown(self):
         """Shuts down the robot and sets the LEDs to Green"""

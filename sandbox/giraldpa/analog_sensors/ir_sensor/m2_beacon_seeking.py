@@ -9,8 +9,8 @@ function gets the robot to that location it will stop the robot and return.  Wit
 prompted if they want to find the beacon again (presumably you move it first) or quit.
 
 
-Authors: David Fisher and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+Authors: David Fisher and Pattie Giraldo.
+"""  # done: 1. PUT YOUR NAME IN THE ABOVE LINE.
 import traceback
 
 import ev3dev.ev3 as ev3
@@ -29,13 +29,16 @@ def main():
     robot = robo.Snatch3r()
     try:
         while True:
-            seek_beacon(robot)
+
+            result = seek_beacon(robot)
 
             # TODO: 5. Save the result of the seek_beacon function (a bool), then use that value to only say "Found the
             # beacon" if the return value is True.  (i.e. don't say "Found the beacon" if the attempts was cancelled.)
-            ev3.Sound.speak("Found the beacon")
+            if result is True:
+                ev3.Sound.speak("Found the beacon")
 
-            command = input("Hit enter to seek the beacon again or enter q to quit: ")
+            command = input(
+                "Hit enter to seek the beacon again or enter q to quit: ")
             if command == "q":
                 break
     except:
@@ -57,22 +60,23 @@ def seek_beacon(robot):
     """
 
     # TODO: 2. Create a BeaconSeeker object on channel 1.
-
+    beacon_seeker = ev3.BeaconSeeker(channel=4)
     forward_speed = 300
     turn_speed = 100
 
     while not robot.touch_sensor.is_pressed:
         # The touch sensor can be used to abort the attempt (sometimes handy during testing)
 
-        # TODO: 3. Use the beacon_seeker object to get the current heading and distance.
-        current_heading = 0  # use the beacon_seeker heading
-        current_distance = 0  # use the beacon_seeker distance
+        # done: 3. Use the beacon_seeker object to get the current heading and
+        # distance.
+        current_heading = beacon_seeker.heading  # use the beacon_seeker heading
+        current_distance = beacon_seeker.distance  # use the beacon_seeker distance
         if current_distance == -128:
             # If the IR Remote is not found just sit idle for this program until it is moved.
             print("IR Remote not found. Distance is -128")
             robot.stop()
         else:
-            # TODO: 4. Implement the following strategy to find the beacon.
+            # done: 4. Implement the following strategy to find the beacon.
             # If the absolute value of the current_heading is less than 2, you are on the right heading.
             #     If the current_distance is 0 return from this function, you have found the beacon!  return True
             #     If the current_distance is greater than 0 drive straight forward (forward_speed, forward_speed)
@@ -92,13 +96,28 @@ def seek_beacon(robot):
             if math.fabs(current_heading) < 2:
                 # Close enough of a heading to move forward
                 print("On the right heading. Distance: ", current_distance)
+                if current_distance <= 1:
+                    print("You have found the beacon!")
+                    robot.stop()
+                    robot.drive_inches(4, 300)
+                    robot.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+                    robot.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
+                    ev3.Sound.speak("You have found the beacon!")
+                    return True
+                elif current_distance > 1:
+                    robot.drive(forward_speed, forward_speed)
+            elif math.fabs(current_heading) > 2 and math.fabs(current_heading) \
+                    < 10:
+                print("Adjusting heading: ", current_heading)
+                if current_heading < 0:
+                    robot.drive(-turn_speed, turn_speed)
+                elif current_heading > 0:
+                    robot.drive(turn_speed, -turn_speed)
+            elif math.fabs(current_heading) > 10:
+                robot.stop()
+                print("Heading too far off to fix: ", current_heading)
+
                 # You add more!
-
-
-
-
-
-
 
         time.sleep(0.2)
 

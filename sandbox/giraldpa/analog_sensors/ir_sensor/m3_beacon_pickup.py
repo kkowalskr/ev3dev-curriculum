@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 """
 The goal of this module is to drive towards the beacon (the IR remote in beacon mode) and stop your robot right in front
 of the beacon (just like the last module).  Then pick up the beacon using the gripper.  After the pickup the robot will
@@ -47,7 +47,8 @@ def main():
                 robot.arm_up()
                 time.sleep(1)
                 robot.arm_down()
-            command = input("Hit enter to seek the beacon again or enter q to quit: ")
+            command = input(
+                "Hit enter to seek the beacon again or enter q to quit: ")
             if command == "q":
                 break
     except:
