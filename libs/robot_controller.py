@@ -128,7 +128,6 @@ class Snatch3r(object):
         turn_speed = 100
         print("running")
         while not self.touch_sensor.is_pressed:
-            print("while loop 1")
             current_heading = self.beacon_seeker.heading
             current_distance = self.beacon_seeker.distance
             if current_distance == -128:
@@ -141,8 +140,6 @@ class Snatch3r(object):
                         print("You have found the beacon!")
                         self.stop()
                         self.drive_inches(4, 300)
-                        self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
-                        self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
                         ev3.Sound.speak("You have found the beacon!")
                         return True
                     elif current_distance > 1:
@@ -163,9 +160,9 @@ class Snatch3r(object):
 
             time.sleep(0.2)
 
-            print("Abandon ship!")
-            self.stop()
-            return False
+        print("Abandon ship!")
+        self.stop()
+        return False
 
     def shutdown(self):
         """Shuts down the robot and sets the LEDs to Green"""
