@@ -96,7 +96,7 @@ def drive_to_color(button_state, robot, color_to_seek):
     robot.stop()
 
         # DONE: 3. Implement the task as stated in this module's initial
-    # comment block
+        # comment block
         # It is recommended that you add to your Snatch3r class's constructor the color_sensor, as shown
         #   self.color_sensor = ev3.ColorSensor()
         #   assert self.color_sensor
