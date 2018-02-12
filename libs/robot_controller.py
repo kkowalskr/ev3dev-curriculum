@@ -122,7 +122,8 @@ class Snatch3r(object):
         ev3.Sound.beep().wait()
 
     def seek_beacon(self):
-
+        """Finds the remote controller and drives to it and returns true
+        when the beacon is reached."""
         forward_speed = 300
         turn_speed = 100
         print("running")
@@ -154,8 +155,6 @@ class Snatch3r(object):
                 elif math.fabs(current_heading) > 10:
                     self.drive(-200, 200)
                     print("Heading too far off to fix: ", current_heading)
-
-                    # You add more!
 
             time.sleep(0.2)
 
