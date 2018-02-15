@@ -34,8 +34,9 @@ class Player(object):
         return roll
 
     def play(self, color):
-        if color == "green":
-            self.payday()
+        print(color)
+        if color == "white":
+            print("play working")
         #elif color == "red":
 
     def payday(self):
@@ -47,20 +48,17 @@ class MyDelegateOnThePc(object):
 
     def __init__(self, label_to_display_messages_in):
         self.display_label = label_to_display_messages_in
+        self.running = True
 
     def color_seen(self, color):
         print("Space is: " +color)
-        message_to_display = "{} space.".format(color)
-        if color == 'red':
-            print("red")
-        elif color == 'green':
-            print("green")
+        message_to_display = "You landed on {}.".format(color)
+
         self.display_label.configure(text=message_to_display)
 
 
 def main():
     player = Player()
-    #robot = robo.Snatch3r
     root = tkinter.Tk()
     root.title("Game Start")
     main_frame = ttk.Frame(root, padding=20, relief='raised')
@@ -89,7 +87,7 @@ def main():
     pc_delegate = MyDelegateOnThePc(color_label)
     mqtt_client = com.MqttClient(pc_delegate)
     mqtt_client.connect_to_ev3()
-    move_button['command'] = lambda: send_move_command(mqtt_client,player.move())
+    move_button['command'] = lambda: send_move_command(mqtt_client, distance=player.move())
     root.mainloop()
 
 
