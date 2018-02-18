@@ -1,8 +1,8 @@
 import random
 import tkinter
 from tkinter import ttk
+import time
 import mqtt_remote_method_calls as com
-
 
 class Player(object):
 
@@ -33,12 +33,14 @@ class MyDelegateOnThePc(object):
         self.job = job
         self.salary = salary
         self.money_label = money_label
-        self.house = 0
+        self.house = 1
         self.spouse = 0
         self.kids = 0
 
     def color_seen(self, color):
-        print("Space is: " + color)
+        print(color)
+
+        time.sleep(2)
         message_to_display = "You landed on {}.".format(color)
 
         self.display_label.configure(text=message_to_display)
@@ -85,13 +87,13 @@ class MyDelegateOnThePc(object):
             else:
                 loss = 10000
                 message_to_display = "You've had a child! -${}".format(loss)
-                self.money_label -= loss
+                self.money -= loss
                 self.kids += 1
                 self.display_label.configure(text=message_to_display)
 
         if color == "blue":
             print("House selection or raise")
-            if self.house == 0:
+            if self.house == 1:
                 root = tkinter.Tk()
                 root.title("House selection")
                 main_frame = ttk.Frame(root, padding=20, relief='raised')
@@ -114,7 +116,7 @@ class MyDelegateOnThePc(object):
                 penthouse_button['command'] = lambda: house_choice(self, root, 4)
                 root.mainloop()
             else:
-                add = self.salary/3
+                add = round(self.salary/3,2)
                 message_to_display = "You got a raise of ${}".format(add)
                 self.salary += add
                 self.display_label.configure(text=message_to_display)
@@ -128,8 +130,8 @@ class MyDelegateOnThePc(object):
                 print("Married with", self.kids, "kids")
             houses = ["Shack", "Houseboat", "Small Cape", "Executive "
                                                           "Penthouse"]
-            print("You lived in a", houses[self.house])
-            quit()
+            print("You lived in a", houses[self.house-1])
+            #quit()
 
         new_money = "You have ${}.".format(self.money)
 
@@ -170,6 +172,7 @@ def main():
     mqtt_client = com.MqttClient(pc_delegate)
     mqtt_client.connect_to_ev3()
     move_button['command'] = lambda: send_move_command(mqtt_client, distance=player.move())
+    time.sleep(.5)
     root.mainloop()
 
 
@@ -181,7 +184,7 @@ def school_choice(player, root, choice):
 
 
 def job_selection(player):
-    luck = random.randrange(1, 2)
+    luck = random.randrange(1, 3)
     job_screen = tkinter.Tk()
     job_screen.title("Job selection")
     frame = ttk.Frame(job_screen, padding=20, relief='raised')
