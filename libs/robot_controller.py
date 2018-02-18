@@ -13,7 +13,7 @@
   Instead just make a method called arm_up that could be called.  That way
   it's a generic action that could be used in any task.
 """
-
+import mqtt_remote_method_calls as com
 import ev3dev.ev3 as ev3
 import time
 import math
@@ -24,6 +24,7 @@ class Snatch3r(object):
     different programs."""
 
     def __init__(self):
+        self.current_color = self.color_sensor.color
         self.running = True
         self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
@@ -33,6 +34,8 @@ class Snatch3r(object):
         self.beacon_seeker = ev3.BeaconSeeker(channel=4)
         self.color_sensor = ev3.ColorSensor()
         self.pixy = ev3.Sensor(driver_name='pixy-lego')
+        self.mqtt_client = com.MqttClient(self)
+        self.mqtt_client.connect_to_pc()
 
         assert self.ir_sensor.connected
         assert self.color_sensor.connected
@@ -140,7 +143,7 @@ class Snatch3r(object):
                         print("You have found the beacon!")
                         self.stop()
                         self.drive_inches(4, 300)
-                        ev3.Sound.speak("You have found the beacon!")
+                        # ev3.Sound.speak("You have found beacon")
                         return True
                     elif current_distance > 1:
                         self.drive(forward_speed, forward_speed)
@@ -173,3 +176,55 @@ class Snatch3r(object):
         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
         print('Goodbye')
         ev3.Sound.speak('Goodbye').wait()
+
+    def mario(self, left_speed_entry, right_speed_entry):
+        """Runs drive function and runs through multiple if statements to
+        see if any of them are true, if they are they go into that code and
+        then break"""
+        self.drive(left_speed_entry, right_speed_entry)
+
+        while True:
+            self.pixy.mode = "SIG1"
+            # print(self.pixy.value(3))
+            if self.pixy.value(3) > 40:
+                self.seek_beacon()
+
+                found_beacon = self.seek_beacon()
+
+                if found_beacon is True:
+                    ev3.Sound.speak(
+                        "Mario found Princess Peach, You have won the "
+                        "game").wait()
+                    self.arm_up()
+                    time.sleep(1)
+                    self.arm_down()
+                    self.mqtt_client.send_message('won_game')
+                    break
+                command = input(
+                    "Hit enter to seek the beacon again or enter q to quit: ")
+                if command == "q":
+                    break
+
+            self.pixy.mode = "SIG2"
+            print(self.pixy.value(3))
+            if self.pixy.value(3) > 100:
+                self.arm_up()
+                time.sleep(.01)
+                self.arm_down()
+                ev3.Sound.speak('Mario has crush Koopa Troopa')
+                self.mqtt_client.send_message('crush_turtle')
+                break
+
+            if self.current_color == ev3.ColorSensor.COLOR_GREEN:
+                self.stop()
+                print('Mario has died')
+                ev3.Sound.speak('Koopa Troopa has killed Mario').wait()
+                self.mqtt_client.send_message('mario_is_dead')
+                break
+
+            if self.current_color == ev3.ColorSensor.COLOR_RED:
+                self.stop()
+                print('Mushroom obtained')
+                ev3.Sound.speak("Mushroom obtained").wait()
+                self.mqtt_client.send_message('mushroom_obtained')
+                break
