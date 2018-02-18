@@ -2,22 +2,61 @@ import tkinter
 from tkinter import ttk
 
 import mqtt_remote_method_calls as com
-import robot_controller as robo
-import ev3dev.ev3 as ev3
 
-COLOR_NAMES = ["None", "Black", "Blue", "Green", "Yellow", "Red", "White",
-               "Brown"]
+
+class PictureToComputer(object):
+    def mario_is_dead(self):
+        root1 = tkinter.Toplevel()
+
+        photo = tkinter.PhotoImage(file='mario.gif')
+
+        button1 = ttk.Button(root1, image=photo)
+
+        button1.image = photo
+        button1.grid()
+        button1['command'] = lambda: print('Game over')
+
+    def mushroom_obtained(self):
+        root2 = tkinter.Toplevel()
+
+        photo = tkinter.PhotoImage(file='mushroom.gif')
+
+        button2 = ttk.Button(root2, image=photo)
+
+        button2.image = photo
+        button2.grid()
+        button2['command'] = lambda: print('Mario grew')
+
+    def won_game(self):
+        root3 = tkinter.Toplevel()
+
+        photo = tkinter.PhotoImage(file='peach.gif')
+
+        button3 = ttk.Button(root3, image=photo)
+
+        button3.image = photo
+        button3.grid()
+        button3['command'] = lambda: print('Congrats! You have won the game! ')
+
+    def crush_turtle(self):
+        root4 = tkinter.Toplevel()
+
+        photo = tkinter.PhotoImage(file='koopa.gif')
+
+        button4 = ttk.Button(root4, image=photo)
+
+        button4.image = photo
+        button4.grid()
+        button4['command'] = lambda: print('You have crushed Koopa Troopa ')
 
 
 def main():
-    mqtt_client = com.MqttClient()
+    robot_to_computer = PictureToComputer()
+    mqtt_client = com.MqttClient(robot_to_computer)
     mqtt_client.connect_to_ev3()
 
-    robot = robo.Snatch3r()
-    # robot.pixy.mode = "SIG1"
-
     root = tkinter.Tk()
-    root.title("MQTT Remote")
+    root.title("Let's Play Mario")
 
     main_frame = ttk.Frame(root, padding=20, relief='raised')
     main_frame.grid()
@@ -107,40 +146,26 @@ def send_down(mqtt_client):
 
 def send_forward(mqtt_client, left_speed_entry, right_speed_entry):
     print("forward")
-    if not ev3.ColorSensor.COLOR_GREEN or ev3.ColorSensor.COLOR_BROWN:
-        mqtt_client.send_message("drive", [int(left_speed_entry.get()),
-                                           int(right_speed_entry.get())])
-    else:
-        ev3.Sound.speak('Mario as died')
-        robot.stop()
+    mqtt_client.send_message("mario", [int(left_speed_entry.get()),
+                                       int(right_speed_entry.get())])
 
 
 def send_left(mqtt_client, left_speed_entry, right_speed_entry):
     print("left")
-    if not ev3.ColorSensor.COLOR_GREEN or ev3.ColorSensor.COLOR_BROWN:
-        mqtt_client.send_message("drive", [-int(left_speed_entry.get()),
-                                           int(right_speed_entry.get())])
-    else:
-        ev3.Sound.speak('Mario has died')
+    mqtt_client.send_message("mario", [-int(left_speed_entry.get()),
+                                       int(right_speed_entry.get())])
 
 
 def send_right(mqtt_client, left_speed_entry, right_speed_entry):
     print("right")
-    if not ev3.ColorSensor.COLOR_GREEN or ev3.ColorSensor.COLOR_BROWN:
-        mqtt_client.send_message("drive", [int(left_speed_entry.get()),
-                                           -int(right_speed_entry.get())])
-    else:
-        ev3.Sound.speak('Mario has died')
+    mqtt_client.send_message("mario", [int(left_speed_entry.get()),
+                                       -int(right_speed_entry.get())])
 
 
 def send_back(mqtt_client, left_speed_entry, right_speed_entry):
     print("backward")
-    if not ev3.ColorSensor.COLOR_GREEN or ev3.ColorSensor.COLOR_BROWN:
-        mqtt_client.send_message("backward", [int(left_speed_entry.get()),
-                                              int(right_speed_entry.get())])
-    else:
-
-        ev3.Sound.speak('Mario has died')
+    mqtt_client.send_message("backward", [int(left_speed_entry.get()),
+                                          int(right_speed_entry.get())])
 
 
 def send_stop(mqtt_client):
