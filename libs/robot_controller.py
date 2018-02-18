@@ -143,7 +143,7 @@ class Snatch3r(object):
                         print("You have found the beacon!")
                         self.stop()
                         self.drive_inches(4, 300)
-                        # ev3.Sound.speak("You have found Princess Peach!")
+                        # ev3.Sound.speak("You have found beacon")
                         return True
                     elif current_distance > 1:
                         self.drive(forward_speed, forward_speed)
