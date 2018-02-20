@@ -24,10 +24,9 @@ class Snatch3r(object):
     different programs."""
 
     def __init__(self):
-        self.current_color = self.color_sensor.color
         self.running = True
         self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
-        self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
+        self.right_motor = ev3.LargeMotor(ev3.OUTPUT_D)
         self.arm_motor = ev3.MediumMotor(ev3.OUTPUT_A)
         self.touch_sensor = ev3.TouchSensor()
         self.ir_sensor = ev3.InfraredSensor()
@@ -47,6 +46,7 @@ class Snatch3r(object):
         self.MAX_SPEED = 900
 
     def loop_forever(self):
+        """Creates an infinite while loop"""
         while self.running:
             time.sleep(0.1)
 
@@ -161,7 +161,9 @@ class Snatch3r(object):
 
             time.sleep(0.2)
 
-        print("Abandon ship!")
+        print("Bowser has stopped Mario!")
+        ev3.Sound.speak('Bowser has stopped Mario')
+        self.mqtt_client.send_message('bowser')
         self.stop()
         return False
 
@@ -178,15 +180,13 @@ class Snatch3r(object):
         ev3.Sound.speak('Goodbye').wait()
 
     def mario(self, left_speed_entry, right_speed_entry):
-        """Runs drive function and runs through multiple if statements to
-        see if any of them are true, if they are they go into that code and
-        then break"""
+        """Function that is called in the guiPC that runs various different
+        methods based on the robot's environment """
         self.drive(left_speed_entry, right_speed_entry)
 
         while True:
             self.pixy.mode = "SIG1"
-            # print(self.pixy.value(3))
-            if self.pixy.value(3) > 40:
+            if self.pixy.value(3) > 45:
                 self.seek_beacon()
 
                 found_beacon = self.seek_beacon()
@@ -200,21 +200,8 @@ class Snatch3r(object):
                     self.arm_down()
                     self.mqtt_client.send_message('won_game')
                     break
-                command = input(
-                    "Hit enter to seek the beacon again or enter q to quit: ")
-                if command == "q":
-                    break
 
-            self.pixy.mode = "SIG2"
-            print(self.pixy.value(3))
-            if self.pixy.value(3) > 100:
-                self.arm_up()
-                time.sleep(.01)
-                self.arm_down()
-                ev3.Sound.speak('Mario has crush Koopa Troopa')
-                self.mqtt_client.send_message('crush_turtle')
-                break
-
+            self.current_color = self.color_sensor.color
             if self.current_color == ev3.ColorSensor.COLOR_GREEN:
                 self.stop()
                 print('Mario has died')

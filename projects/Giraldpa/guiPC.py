@@ -4,8 +4,11 @@ from tkinter import ttk
 import mqtt_remote_method_calls as com
 
 
+# noinspection PyMethodMayBeStatic
 class PictureToComputer(object):
     def mario_is_dead(self):
+        """Makes a new tkinter window that is a picture that acts as a
+        button and when is pressed prints a statement in the python console"""
         root1 = tkinter.Toplevel()
 
         photo = tkinter.PhotoImage(file='mario.gif')
@@ -17,6 +20,8 @@ class PictureToComputer(object):
         button1['command'] = lambda: print('Game over')
 
     def mushroom_obtained(self):
+        """Makes a new tkinter window that is a picture that acts as a
+        button and when is pressed prints a statement in the python console"""
         root2 = tkinter.Toplevel()
 
         photo = tkinter.PhotoImage(file='mushroom.gif')
@@ -28,6 +33,8 @@ class PictureToComputer(object):
         button2['command'] = lambda: print('Mario grew')
 
     def won_game(self):
+        """Makes a new tkinter window that is a picture that acts as a
+        button and when is pressed prints a statement in the python console"""
         root3 = tkinter.Toplevel()
 
         photo = tkinter.PhotoImage(file='peach.gif')
@@ -38,19 +45,22 @@ class PictureToComputer(object):
         button3.grid()
         button3['command'] = lambda: print('Congrats! You have won the game! ')
 
-    def crush_turtle(self):
-        root4 = tkinter.Toplevel()
+    def bowser(self):
+        """Makes a new tkinter window that is a picture that acts as a
+        button and when is pressed prints a statemtn in the python console"""
+        root5 = tkinter.Toplevel()
 
-        photo = tkinter.PhotoImage(file='koopa.gif')
+        photo = tkinter.PhotoImage(file='bowser.gif')
 
-        button4 = ttk.Button(root4, image=photo)
+        button5 = ttk.Button(root5, image=photo)
 
-        button4.image = photo
-        button4.grid()
-        button4['command'] = lambda: print('You have crushed Koopa Troopa ')
+        button5.image = photo
+        button5.grid()
+        button5['command'] = lambda: print('You have crushed Koopa Troopa ')
 
 
 def main():
+    """Makes a gui that controls the robot"""
     robot_to_computer = PictureToComputer()
     mqtt_client = com.MqttClient(robot_to_computer)
     mqtt_client.connect_to_ev3()
@@ -64,13 +74,13 @@ def main():
     left_speed_label = ttk.Label(main_frame, text="Left")
     left_speed_label.grid(row=0, column=0)
     left_speed_entry = ttk.Entry(main_frame, width=8)
-    left_speed_entry.insert(0, "600")
+    left_speed_entry.insert(0, "300")
     left_speed_entry.grid(row=1, column=0)
 
     right_speed_label = ttk.Label(main_frame, text="Right")
     right_speed_label.grid(row=0, column=2)
     right_speed_entry = ttk.Entry(main_frame, width=8, justify=tkinter.RIGHT)
-    right_speed_entry.insert(0, "600")
+    right_speed_entry.insert(0, "300")
     right_speed_entry.grid(row=1, column=2)
 
     forward_button = ttk.Button(main_frame, text="Forward")
@@ -135,45 +145,56 @@ def main():
 
 
 def send_up(mqtt_client):
+    """Sends a message to the robot to run the function arm up"""
     print("arm_up")
     mqtt_client.send_message("arm_up")
 
 
 def send_down(mqtt_client):
+    """Sends a message to the robot to run the function arm down"""
     print("arm_down")
     mqtt_client.send_message("arm_down")
 
 
 def send_forward(mqtt_client, left_speed_entry, right_speed_entry):
+    """Sends a message to the robot to run the function mario, which has the
+    function drive in it"""
     print("forward")
     mqtt_client.send_message("mario", [int(left_speed_entry.get()),
                                        int(right_speed_entry.get())])
 
 
 def send_left(mqtt_client, left_speed_entry, right_speed_entry):
+    """Sends a message to the robot to run the function mario, which has the
+    function drive in it"""
     print("left")
     mqtt_client.send_message("mario", [-int(left_speed_entry.get()),
                                        int(right_speed_entry.get())])
 
 
 def send_right(mqtt_client, left_speed_entry, right_speed_entry):
+    """Sends a message to the robot to run the function mario, which has the
+    function drive in it"""
     print("right")
     mqtt_client.send_message("mario", [int(left_speed_entry.get()),
                                        -int(right_speed_entry.get())])
 
 
 def send_back(mqtt_client, left_speed_entry, right_speed_entry):
+    """Sends a message to the robot to run the function backwards"""
     print("backward")
     mqtt_client.send_message("backward", [int(left_speed_entry.get()),
                                           int(right_speed_entry.get())])
 
 
 def send_stop(mqtt_client):
+    """Sends a mesasge to the robot to run the function stop"""
     print("stop")
     mqtt_client.send_message("stop")
 
 
 def quit_program(mqtt_client, shutdown_ev3):
+    """Sends a message to the robot to run the function shutdown"""
     if shutdown_ev3:
         print("shutdown")
         mqtt_client.send_message("shutdown")
